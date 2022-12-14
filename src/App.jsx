@@ -3,19 +3,23 @@ import {
   countSelector,
   increment,
   decrement,
-  postsSelector,
 } from './features/counter/counterSlice';
-import { useGetPostsQuery } from './features/posts/postsSlice';
+import { useFetchPostsQuery } from './features/posts/postsSlice';
 import reactLogo from './assets/react.svg';
 import './App.css';
 
 function App() {
   const count = useSelector(countSelector);
-  // const posts = useSelector(postsSelector);
-  const dispatch = useDispatch();
-  const { posts } = useGetPostsQuery();
 
-  console.log(posts);
+  const dispatch = useDispatch();
+  const {
+    data = [],
+    isFetching,
+    error,
+    isError,
+    isLoading,
+  } = useFetchPostsQuery();
+
   return (
     <div className="App">
       <div>
@@ -34,6 +38,12 @@ function App() {
         </p>
         <button onClick={() => dispatch(decrement())}>count is {count}</button>
       </div>
+      {data.map((post) => (
+        <div key={post.id}>
+          <h3>{post.title}</h3>
+          <p>{post.body}</p>
+        </div>
+      ))}
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
